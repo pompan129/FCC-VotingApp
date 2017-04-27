@@ -1,0 +1,22 @@
+{
+  "name": "voting",
+  "version": "1.0.0",
+  "description": "FCC Backend Project: https://www.freecodecamp.com/challenges/build-a-voting-app",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pompan129/FCC-VotingApp.git"
+  },
+  "author": "KJ",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pompan129/FCC-VotingApp/issues"
+  },
+  "homepage": "https://github.com/pompan129/FCC-VotingApp#readme",
+  "dependencies": {
+    "express": "^4.15.2"
+  }
+}
