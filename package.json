@@ -4,7 +4,8 @@
   "description": "FCC Backend Project: https://www.freecodecamp.com/challenges/build-a-voting-app",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "devstart": "concurrently \"node server\"  \"cd client && npm start\""
   },
   "repository": {
     "type": "git",
@@ -18,5 +19,8 @@
   "homepage": "https://github.com/pompan129/FCC-VotingApp#readme",
   "dependencies": {
     "express": "^4.15.2"
+  },
+  "devDependencies": {
+    "concurrently": "^3.4.0"
   }
 }
