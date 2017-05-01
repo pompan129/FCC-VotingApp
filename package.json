@@ -18,7 +18,8 @@
   },
   "homepage": "https://github.com/pompan129/FCC-VotingApp#readme",
   "dependencies": {
-    "express": "^4.15.2"
+    "express": "^4.15.2",
+    "react-redux": "^5.0.4"
   },
   "devDependencies": {
     "concurrently": "^3.4.0"
