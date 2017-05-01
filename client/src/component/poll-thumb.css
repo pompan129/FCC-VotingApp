@@ -1,3 +1,17 @@
 .thumb-container {
   padding:0;
 }
+
+.chart{
+	background-color: #F5F2EB;
+	border: 1px solid #CCC;
+}
+.bar{
+	fill: purple;
+	shape-rendering: crispEdges;
+}
+.bar-label{
+	fill: white;
+	text-anchor:end;
+	font-size: 10px;
+}

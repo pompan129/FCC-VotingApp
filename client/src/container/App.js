@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Header from '../component/header';
 import Dashboard from './dashboard';
-import PollList from '../component/poll-list';
+import PollList from './poll-list';
 import Login from '../component/login';
 import SignUp from '../component/signup';
 import EditPoll from '../component/edit-poll';
