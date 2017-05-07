@@ -1,17 +1,33 @@
 import React from 'react';
-import pollData from '../utility/data'
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom'
 import PollThumb from '../component/poll-thumb';
 
-const PollList = (props)=>{
+class PollList extends React.Component{
 
-  const polls = pollData.map(data=>
-    <PollThumb key={data.author+data.title} {...data}/>)
+  render(){
 
-  return (
-    <div className="container">
-      <div className="row">{polls}</div>
-    </div>
-  )
+    let {polls} = this.props;
+    polls = polls.map(poll=>
+      <Link to={`/${poll.id}`}   key={poll.id}>
+        <PollThumb poll={poll} id={"p-"+poll.id}></PollThumb>
+      </Link>
+
+    )
+
+    return (
+      <div className="container">
+        <div className="row">{polls}</div>
+      </div>
+    )
+  }
+
 }
 
-export default PollList;
+function mapStateToProps(state){
+    return {
+        polls:state.polls.polls
+    }
+}
+
+export default connect(mapStateToProps)(PollList);

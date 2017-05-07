@@ -7,11 +7,11 @@ import Dashboard from './dashboard';
 import PollList from './poll-list';
 import Login from '../component/login';
 import SignUp from '../component/signup';
-import EditPoll from '../component/edit-poll';
+import EditPoll from './poll-editor';
 import Settings from '../component/settings';
-import Poll from '../component/poll';
+import Poll from './poll';
 import Home from './home'
-import {setAuth} from '../actions';
+import {setAuth,getAllPolls} from '../actions';
 
 
 class App extends React.Component {
@@ -19,6 +19,9 @@ class App extends React.Component {
     super(props);
     this.handleLogin = this.handleLogin.bind(this);
     this.handleSignUp = this.handleSignUp.bind(this);
+  }
+  componentWillMount(){
+    this.props.getAllPolls();
   }
 
   handleLogin(values){
@@ -36,12 +39,11 @@ class App extends React.Component {
 
 
   render() {
-    console.log("authenticated?>",this.props.auth);//todo
+    console.log("App>props=",this.props)
     return (
       <BrowserRouter>
         <div className='app-container'>
           <Header />
-
           <Switch>
             <Route exact path='/' component={Home} />
             <Route  path='/dashboard' component={Dashboard} />
@@ -52,8 +54,8 @@ class App extends React.Component {
               render={()=><SignUp onSubmit={this.handleSignUp} isAuthenticated={this.props.auth}/>} />
             <Route  path='/editpoll' component={EditPoll} />
             <Route  path='/settings' component={Settings} />
-            <Route  path='/poll' component={Poll} />
-            <Route render={function () {
+            <Route  path='/:id' component={Poll} />
+            <Route  path='/error' render={function () {
               return <h2>ERROR</h2>
             }} />
           </Switch>
@@ -66,10 +68,11 @@ class App extends React.Component {
 function mapStateToProps(state){
     return {
         auth: state.user.auth,
+        polls:state.polls.polls
     }
 }
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ setAuth}, dispatch);
+    return bindActionCreators({ setAuth,getAllPolls}, dispatch);
 }
 
 export default connect(mapStateToProps,mapDispatchToProps)(App);

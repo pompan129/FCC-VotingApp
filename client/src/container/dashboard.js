@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import {Link,Redirect} from 'react-router-dom'
+import {Link} from 'react-router-dom'
 import MyPolls from '../component/my-polls';
 import Settings from '../component/settings';
 
@@ -17,19 +16,18 @@ class Dashboard extends React.Component {
     this.setState({content});
   }
   render(){
-    if(this.state.content ==="browse"){return <Redirect to='/browse' />}
     return (
       <div className="dashboard">
         <h1>Dashboard</h1>
         <ul>
           <li>
-            <button onClick={()=>this.handleSetContent("polls")}>My Polls</button>
+            <button  className="btn btn-info" onClick={()=>this.handleSetContent("polls")}>My Polls</button>
           </li>
           <li>
-            <button onClick={()=>this.handleSetContent("browse")}>Browse</button>
+            <Link to='/browse' className="btn btn-info">Browse</Link>
           </li>
           <li>
-            <button onClick={()=>this.handleSetContent("settings")}>Settings</button>
+            <button  className="btn btn-info" onClick={()=>this.handleSetContent("settings")}>Settings</button>
           </li>
         </ul>
         <div>
