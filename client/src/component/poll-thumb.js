@@ -1,21 +1,9 @@
 import React from 'react';
 import './poll-thumb.css';
-import {BarChart} from '../utility/graph-generator'
+import BarGraph from '../container/graph-bar';
 
 
 class PollThumb extends React.Component {
-
-  constructor(props){
-    super(props);
-    this.state = {}
-  }
-
-  componentDidMount(){
-        const {poll} = this.props;
-        const elem = document.getElementById("p-"+poll.id);
-        this.chart = new BarChart({elem,data:poll.data,width:150,height:150});
-        this.chart.create();
-  }
 
   render(){
     const {id,author,title} = this.props.poll;
@@ -25,7 +13,7 @@ class PollThumb extends React.Component {
           <h2 className="panel-title">{title}</h2>
           <span>by {author}</span>
         </div>
-        <div className="graph panel-body" id={"p-"+id} ></div>
+        <BarGraph width={150} height={150} id={id} poll={this.props.poll}/>
       </div>
     )
   }

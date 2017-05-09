@@ -4,14 +4,16 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Header from '../component/header';
 import Dashboard from './dashboard';
-import PollList from './poll-list';
+import PollList from './poll-list-all';
 import Login from '../component/login';
 import SignUp from '../component/signup';
-import EditPoll from './poll-editor';
-import Settings from '../component/settings';
+import EditPoll from './poll-edit';
+import UserSettings from '../component/user-settings';
 import Poll from './poll';
 import Home from './home'
-import {setAuth,getAllPolls} from '../actions';
+import {setAuth,getAllPolls_Async} from '../actions';
+
+import Test from '../component/test';
 
 
 class App extends React.Component {
@@ -21,11 +23,10 @@ class App extends React.Component {
     this.handleSignUp = this.handleSignUp.bind(this);
   }
   componentWillMount(){
-    this.props.getAllPolls();
+    this.props.getAllPolls_Async();
   }
 
   handleLogin(values){
-    console.log("login:",values);//todo
     this.props.auth?
       this.props.setAuth(false):
       this.props.setAuth(true);
@@ -37,9 +38,11 @@ class App extends React.Component {
       this.props.setAuth(true);
   }
 
-
+//todo remove 'test' route
   render() {
-    console.log("App>props=",this.props)
+    console.log("App render props=",this.props)
+    if(!this.props.polls){this.props.getAllPolls_Async(); return null;}//todo
+
     return (
       <BrowserRouter>
         <div className='app-container'>
@@ -47,14 +50,15 @@ class App extends React.Component {
           <Switch>
             <Route exact path='/' component={Home} />
             <Route  path='/dashboard' component={Dashboard} />
-            <Route  path='/browse' component={PollList} />
+            <Route  path='/browse' render={()=><PollList polls={this.props.polls} />} />
             <Route  path='/login'
               render={()=><Login onSubmit={this.handleLogin} isAuthenticated={this.props.auth} />} />
             <Route  path='/signup'
               render={()=><SignUp onSubmit={this.handleSignUp} isAuthenticated={this.props.auth}/>} />
-            <Route  path='/editpoll' component={EditPoll} />
-            <Route  path='/settings' component={Settings} />
-            <Route  path='/:id' component={Poll} />
+            <Route  path='/editpoll/:id' component={EditPoll} />
+            <Route  path='/settings' component={UserSettings} />
+            <Route  path='/test' component={Test} />
+            <Route  path='/poll/:id' component={Poll} />
             <Route  path='/error' render={function () {
               return <h2>ERROR</h2>
             }} />
@@ -65,14 +69,15 @@ class App extends React.Component {
   }
 }
 
-function mapStateToProps(state){
+function mapStateToProps({user,polls,}){
     return {
-        auth: state.user.auth,
-        polls:state.polls.polls
+        user: user.current,
+        auth:user.auth,
+        polls
     }
 }
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ setAuth,getAllPolls}, dispatch);
+    return bindActionCreators({ setAuth,getAllPolls_Async}, dispatch);
 }
 
 export default connect(mapStateToProps,mapDispatchToProps)(App);

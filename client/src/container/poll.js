@@ -1,38 +1,27 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import {BarChart} from '../utility/graph-generator';
-import {editVotes} from '../actions';
+import {editVotes,getPoll} from '../actions';
+import BarGraph from './graph-bar';
 
 class Poll extends React.Component {
 
   constructor(props){
     super(props);
-    const poll = this.props.polls.find(poll=>poll.id===this.props.match.params.id);
-    this.state = {selectedOption:"",id:poll.id, poll:poll}//todo
+    this.state = {selectedOption:""}//todo
     this.onRadioClick = this.onRadioClick.bind(this);
     this.onFormSubmit = this.onFormSubmit.bind(this);
   }
 
   componentDidMount(){
-    const {poll} = this.state;
-    const elem = document.getElementById("p-"+this.state.id);
-    this.chart = new BarChart({elem,data:poll.data,width:250,height:250})
-    this.chart.create();
-  }
-
-  componentWillReceiveProps(nextProps){
-    const poll = nextProps.polls.find(poll=>poll.id===this.props.match.params.id);
-    this.setState(
-      {poll: poll}//todo?
-    )
-    this.chart.update({data:poll.data})
-
+    const {id} = this.props.match.params;
+    this.props.getPoll(id);
   }
 
   onFormSubmit(event){
     event.preventDefault();
-    this.props.editVotes(this.state.poll.id, this.state.selectedOption)
+    console.log("poll.js>onFormSubmit>this.props.poll:",this.props.poll)
+    this.props.editVotes(this.props.poll, this.state.selectedOption)
 
   }
 
@@ -42,22 +31,24 @@ class Poll extends React.Component {
   }
 
   render(){
-    const {poll} = this.state
-    const {author,data,title,id} = poll;  //onClick={this.onRadioClick} todo
-    const pollChoices = data.map((choice)=>{
-    return <div className="form-check" key={choice.name}>
-               <label className="form-check-label">
-                  <input className="form-check-input"
-                    type="radio"
-                    checked={(this.state.selectedOption === choice.name)}
-                    id={"radio-"+choice.name}
-                    value={choice.name}
-                    onChange={this.onRadioClick}
-                    />
-                  {"   " + choice.name + "   " + choice.votes}
-               </label>
-             </div>
-    })
+    if(!this.props.poll){return null;}
+    const {poll} = this.props;
+    const {author,options,title,id} = poll;  //onClick={this.onRadioClick} todo
+    const pollChoices = options.map((choice)=>{
+        return <div className="form-check" key={choice.name}>
+                   <label className="form-check-label">
+                      <input className="form-check-input"
+                        type="radio"
+                        checked={(this.state.selectedOption === choice.name)}
+                        id={"radio-"+choice.name}
+                        value={choice.name}
+                        onChange={this.onRadioClick}
+                        />
+                      {"   " + choice.name + "   " + choice.votes}
+                   </label>
+                 </div>
+        })
+
     return(
       <div className="container">
         <div className="row">
@@ -78,7 +69,7 @@ class Poll extends React.Component {
             </form>
           </div>
           <div className="col-sm-6">
-            <div id={"p-" + id}></div>
+            <BarGraph  id={"p-"+ id} width={300} height={300} poll={poll}/>
           </div>
         </div>
       </div>
@@ -87,15 +78,14 @@ class Poll extends React.Component {
 }
 
 
-function mapStateToProps(state){
+function mapStateToProps({polls},ownProps){
     return {
-        polls:state.polls.polls,
-        state:state
+        poll: polls[ownProps.match.params.id]
     }
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({editVotes}, dispatch);
+    return bindActionCreators({editVotes,getPoll}, dispatch);
 }
 
 

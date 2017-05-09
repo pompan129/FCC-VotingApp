@@ -1,4 +1,5 @@
-import {GET_ALL_POLLS,EDIT_VOTE} from "../actions";
+import update from 'immutability-helper';
+import {SET_ALL_POLLS,EDIT_VOTE} from "../actions";
 
 const poll = (state, action)=>{
   switch (action.type) {
@@ -7,7 +8,7 @@ const poll = (state, action)=>{
           return state
         }
         return {...state,
-            data: state.data.map(o=>o.name===action.payload.option?{name:o.name,votes:o.votes + 1}:o)}
+            options: state.options.map(o=>o.name===action.payload.option?{name:o.name,votes:o.votes + 1}:o)}
       default:
         return state;
   }
@@ -17,14 +18,13 @@ const poll = (state, action)=>{
 
 
 
-export default function (state=[], action) {
+export default function (state={}, action) {
     switch (action.type) {
-        case GET_ALL_POLLS:
-          return {...state, polls:action.payload};
+        case SET_ALL_POLLS:
+          return action.payload;
         case 'EDIT_VOTE':
-          return {...state,polls:state.polls.map(p =>
-              poll(p, action)
-            )};
+        return update(state, {[action.payload.id]:{options:{$set: action.payload.options}}})
+
         default:
           return state;
     }

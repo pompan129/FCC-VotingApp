@@ -2,8 +2,12 @@
   "name": "client",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:3001/",
   "dependencies": {
+    "axios": "^0.16.1",
     "d3": "^4.8.0",
+    "immutability-helper": "^2.2.0",
+    "prop-types": "^15.5.8",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
     "react-redux": "^5.0.4",

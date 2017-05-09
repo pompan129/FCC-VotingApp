@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import {Link} from 'react-router-dom'
-import MyPolls from '../component/my-polls';
-import Settings from '../component/settings';
+import UserPolls from '../component/poll-list-user';
+import UserSettings from '../component/user-settings';
 
 
 class Dashboard extends React.Component {
@@ -12,10 +12,13 @@ class Dashboard extends React.Component {
       content:""
     }
   }
+
+
   handleSetContent(content){
     this.setState({content});
   }
   render(){
+    console.log("Dashboard>props:",this.props);//todo
     return (
       <div className="dashboard">
         <h1>Dashboard</h1>
@@ -31,8 +34,8 @@ class Dashboard extends React.Component {
           </li>
         </ul>
         <div>
-          {this.state.content==="polls"?<MyPolls/>:""}
-          {this.state.content==="settings"?<Settings/>:""}
+          {this.state.content==="polls"?<UserPolls  author={this.props.user}  polls={this.props.polls}/>:""}
+          {this.state.content==="settings"?<UserSettings/>:""}
         </div>
       </div>
     )
@@ -41,9 +44,10 @@ class Dashboard extends React.Component {
 }
 
 
-function mapStateToProps(state){
+function mapStateToProps({user,polls}){
     return {
-        auth: state.user.auth,
+        user: user.current,
+        polls:polls
     }
 }
 
