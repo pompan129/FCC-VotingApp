@@ -20,7 +20,6 @@ class Poll extends React.Component {
 
   onFormSubmit(event){
     event.preventDefault();
-    console.log("poll.js>onFormSubmit>this.props.poll:",this.props.poll)
     this.props.editVotes(this.props.poll, this.state.selectedOption)
 
   }

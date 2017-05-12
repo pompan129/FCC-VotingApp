@@ -6,6 +6,7 @@
   "dependencies": {
     "axios": "^0.16.1",
     "d3": "^4.8.0",
+    "history": "^4.6.1",
     "immutability-helper": "^2.2.0",
     "prop-types": "^15.5.8",
     "react": "^15.5.4",

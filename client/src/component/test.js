@@ -1,7 +1,7 @@
 
 import React from 'react';
 import Axios from "axios";
-import {getAllPolls_Async} from '../actions';
+//import {getAllPolls_Async} from '../actions';
 
 const testFunction = ()=>{
   Axios.post('/api/polls/test', {
@@ -15,11 +15,11 @@ const testFunction = ()=>{
   })
 }
 
-const tester = ()=>{
+const tester =()=>{
 
   return (
     <div>
-      <button onClick = {()=>{testFunction();}}>axios</button>
+      <button onClick={()=>{testFunction();}}>axios</button>
     </div>
   )
 }

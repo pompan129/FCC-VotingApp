@@ -32,15 +32,11 @@ class App extends React.Component {
       this.props.setAuth(true);
   }
   handleSignUp(values){
-    console.log("SignUp:",values);//todo
-    this.props.auth?
-      this.props.setAuth(false):
       this.props.setAuth(true);
   }
 
 //todo remove 'test' route
   render() {
-    console.log("App render props=",this.props)
     if(!this.props.polls){this.props.getAllPolls_Async(); return null;}//todo
 
     return (
@@ -56,6 +52,7 @@ class App extends React.Component {
             <Route  path='/signup'
               render={()=><SignUp onSubmit={this.handleSignUp} isAuthenticated={this.props.auth}/>} />
             <Route  path='/editpoll/:id' component={EditPoll} />
+            <Route  path='/poll-new' component={EditPoll} />
             <Route  path='/settings' component={UserSettings} />
             <Route  path='/test' component={Test} />
             <Route  path='/poll/:id' component={Poll} />

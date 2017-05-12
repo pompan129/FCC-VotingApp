@@ -1,8 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import {Link} from 'react-router-dom'
 import UserPolls from '../component/poll-list-user';
 import UserSettings from '../component/user-settings';
+import {getUserPolls} from '../actions';
 
 
 class Dashboard extends React.Component {
@@ -12,17 +14,22 @@ class Dashboard extends React.Component {
       content:""
     }
   }
-
+  componentDidMount(){
+    this.props.getUserPolls(this.props.user);
+  }
 
   handleSetContent(content){
     this.setState({content});
   }
+
   render(){
-    console.log("Dashboard>props:",this.props);//todo
     return (
       <div className="dashboard">
         <h1>Dashboard</h1>
         <ul>
+          <li>
+            <Link className="btn btn-info" to={`/poll-new`} >Create Poll</Link>
+          </li>
           <li>
             <button  className="btn btn-info" onClick={()=>this.handleSetContent("polls")}>My Polls</button>
           </li>
@@ -34,7 +41,7 @@ class Dashboard extends React.Component {
           </li>
         </ul>
         <div>
-          {this.state.content==="polls"?<UserPolls  author={this.props.user}  polls={this.props.polls}/>:""}
+          {this.state.content==="polls"?<UserPolls  author={this.props.user} polls={this.props.polls} />:""}
           {this.state.content==="settings"?<UserSettings/>:""}
         </div>
       </div>
@@ -51,4 +58,8 @@ function mapStateToProps({user,polls}){
     }
 }
 
-export default connect(mapStateToProps)(Dashboard);
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({getUserPolls}, dispatch);
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(Dashboard);

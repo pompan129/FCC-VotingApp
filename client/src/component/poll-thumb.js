@@ -2,7 +2,7 @@ import React from 'react';
 import './poll-thumb.css';
 import BarGraph from '../container/graph-bar';
 
-
+//todo convert to component
 class PollThumb extends React.Component {
 
   render(){

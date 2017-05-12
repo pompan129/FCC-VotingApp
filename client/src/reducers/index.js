@@ -6,7 +6,6 @@ import pollReducer from './poll-reducer';
 
 const rootReducer = combineReducers({
     form: formReducer,
-    user: userReducer,
     polls: pollReducer,
     user: userReducer
 });

@@ -4,7 +4,7 @@ import {Redirect} from 'react-router-dom';
 
 const Login = (props)=>{
   const { handleSubmit, pristine, reset, submitting } = props;
-  if(props.isAuthenticated){return  <Redirect to="/dashboard"/>;}
+  if(props.isAuthenticated){return <Redirect to="/dashboard"/>;}
   return(
     <form onSubmit={handleSubmit}>
         <div><h2>Login</h2></div>

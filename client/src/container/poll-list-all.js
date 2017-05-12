@@ -9,24 +9,17 @@ import PollThumb from '../component/poll-thumb';
 class PollList extends React.Component{
 
   render(){
+    console.log("PollList",this.props.polls);
     let {polls} = this.props;
-    console.log("PollList>polls",polls)
     const List = [];
 
     for (let key in polls) {
-      console.log("PollList>render>for in", polls[key]);//todo
       List.push(
         <Link to={`/poll/${polls[key].id}`}   key={polls[key].id} >
           <PollThumb poll={polls[key]} id={"p-"+polls[key].id}></PollThumb>
         </Link>
       )
     }
-
-    /*polls = polls.map(poll=>
-      <Link to={`/${poll.id}`}   key={poll.id}>
-        <PollThumb poll={poll} id={"p-"+poll.id}></PollThumb>
-      </Link>
-    )*/
 
     return (
       <div className="container">
