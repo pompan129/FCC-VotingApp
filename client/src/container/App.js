@@ -28,9 +28,16 @@ class App extends React.Component {
 
   handleLogin(values){
     this.props.auth?
-      this.props.setAuth(false):
-      this.props.setAuth(true);
+      this.props.setAuthentication(false):
+      this.props.setAuthentication(true);
   }
+
+  handleLogout(){
+    this.props.setAuthentication(false)
+    localStorage.removeItem("jwt");
+    localStorage.removeItem("username");
+  }
+
   handleSignUp({password, email}){
       this.props.setAuthentication(true);
       console.log("handleSignUp",password, email);//todo
@@ -44,7 +51,7 @@ class App extends React.Component {
     return (
       <BrowserRouter>
         <div className='app-container'>
-          <Header />
+          <Header authenticated={this.props.authenticated} logout={this.handleLogout.bind(this)}/>
           <Switch>
             <Route exact path='/' component={Home} />
             <Route  path='/dashboard' component={Dashboard} />

@@ -3,6 +3,7 @@ import Axios from "axios";
 
 //Actions
 export const SET_AUTHENTICATION = "SET_AUTHENTICATION";
+export const SET_USERNAME = "SET_USERNAME";
 export const GET_ALL_POLLS = "GET_ALL_POLLS";
 export const GET_POLL = "GET_POLL";
 export const SET_ALL_POLLS = "SET_ALL_POLLS";
@@ -17,6 +18,14 @@ export const setAuthentication = (auth)=>{
       payload: auth
     }
 }
+
+export const setUsername = (name)=>{
+    return {
+      type:SET_USERNAME,
+      payload: name
+    }
+}
+
 
 const setAllPolls = (polls)=>{
   let newPolls = {}

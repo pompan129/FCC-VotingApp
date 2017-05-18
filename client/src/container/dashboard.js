@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import {Link} from 'react-router-dom'
+import {Link,Redirect} from 'react-router-dom'
 import UserPolls from '../component/poll-list-user';
 import UserSettings from '../component/user-settings';
 import {getUserPolls} from '../actions';
@@ -23,6 +23,7 @@ class Dashboard extends React.Component {
   }
 
   render(){
+    if(!this.props.authenticated || !this.props.username){return <Redirect to="/"/>; }
     return (
       <div className="dashboard">
         <h1>Dashboard</h1>
@@ -53,7 +54,8 @@ class Dashboard extends React.Component {
 
 function mapStateToProps({user,polls}){
     return {
-        user: user.current,
+        user: user.username,
+        uthenticated: user.authenticated,
         polls:polls
     }
 }
