@@ -4,11 +4,9 @@ import Axios from "axios";
 //import {getAllPolls_Async} from '../actions';
 
 const testFunction = ()=>{
-  Axios.post('/api/polls/test', {
-    author: "carl",
-    title: "boys names",
-    options: [{name:"dave" , votes:5},{name: "john", votes:3}],
-    id: "pol98"
+  Axios.post('/api/user/signup', {
+    username:"Bill@test.com",
+    password: "1234567"
   })
   .then(function (response) {
     console.log(response);

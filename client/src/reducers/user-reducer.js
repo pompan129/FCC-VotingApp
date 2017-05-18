@@ -1,9 +1,9 @@
-import {SET_AUTH} from "../actions";
+import {SET_AUTHENTICATION} from "../actions";
 
-export default function (state={auth:false,current:"Eric"}, action) {
+export default function (state={authenticated:false,current:"Eric"}, action) {
     switch (action.type) {
-        case SET_AUTH:
-          return {...state,auth:action.payload};
+        case SET_AUTHENTICATION:
+          return {...state,authenticated:action.payload};
 
         default:
           return state;

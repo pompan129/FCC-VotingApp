@@ -3,8 +3,9 @@ var bodyParser = require("body-parser");
 const app = express();
 const tempPolls = require('./temp-polls');
 const env = require('./.env');
-var mongoose = require ("mongoose");
-var Poll = require("./models/poll-model");//Poll model for mongodb/mongoose
+const Routes = require("./server/routes");
+//var mongoose = require ("mongoose");todo
+//var Poll = require("./server/models/poll-model");//Poll model for mongodb/mongoose  todo
 
 
 
@@ -26,6 +27,7 @@ db.once('open', function() {
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+/*
 app.get('/api/polls/getall',(req,resp)=>{
   Poll.find({},{_id:0},function(err,polls){
     if (err) {
@@ -128,7 +130,9 @@ app.post('/api/polls/remove/poll',(req,resp)=>{
       resp.send(`success: deleted  poll:${req.body.id}`);
     });
 })
+*/
 
+Routes(app);
 app.set('port', (process.env.PORT || 3001));
 
 app.listen(app.get('port'), () => {

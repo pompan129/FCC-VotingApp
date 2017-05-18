@@ -2,7 +2,7 @@ import Axios from "axios";
 
 
 //Actions
-export const SET_AUTH = "SET_AUTH";
+export const SET_AUTHENTICATION = "SET_AUTHENTICATION";
 export const GET_ALL_POLLS = "GET_ALL_POLLS";
 export const GET_POLL = "GET_POLL";
 export const SET_ALL_POLLS = "SET_ALL_POLLS";
@@ -11,9 +11,9 @@ export const EDIT_POLL = "EDIT_CREATE_POLL";
 export const MERGE_POLLS = "MERGE_POLLS";
 
 
-export const setAuth = (auth)=>{
+export const setAuthentication = (auth)=>{
     return {
-      type:SET_AUTH,
+      type:SET_AUTHENTICATION,
       payload: auth
     }
 }
@@ -136,9 +136,27 @@ export const createPoll = (poll,callback)=>{
     }
 }
 
-export const deletePoll = (id)=>{
-  console.log("actions>deletePoll>id",id);
+export const signupUser = ({username,password})=>{
   return (dispatch, getState) => {
+    Axios.post('/api/user/signup',{username,password})
+        .then(function (resp) {
+          console.log("signupUser-action",resp.data.success);//todo
+          if(resp.data.success){
+            localStorage.setItem('jwt', resp.data.token);
+            localStorage.setItem('username', resp.data.username);
+
+          }
+        })
+        .catch(function (error) {
+          console.log("Error>:",error.response.data.error);
+        });
+    }
+}
+
+//a thunk
+export const deletePoll = (id)=>{
+  return (dispatch, getState) => {
+    console.log("deletePoll(1)");//todo
     Axios.post('/api/polls/remove/poll',{id})
       .then(function (resp) {
         dispatch(getAllPolls_Async());//todo
