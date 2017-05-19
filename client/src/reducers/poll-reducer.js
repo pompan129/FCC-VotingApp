@@ -1,5 +1,5 @@
 import update from 'immutability-helper';
-import {SET_ALL_POLLS,EDIT_VOTE,MERGE_POLLS} from "../actions";
+import {SET_ALL_POLLS,EDIT_VOTE,MERGE_POLLS,GET_POLL} from "../actions";
 
 
 
@@ -11,8 +11,10 @@ export default function (state={}, action) {
         case EDIT_VOTE:
           return update(state, {[action.payload.id]:{options:{$set: action.payload.options}}})
         case MERGE_POLLS:
-          console.log("MERGE_POLLS",action.payload);//todo
           return Object.assign({}, state, action.payload);
+        case GET_POLL:
+        console.log("pollreducer>GET_POLL>",action.payload)
+          return {...state, [action.payload.id]:action.payload}
 
         default:
           return state;

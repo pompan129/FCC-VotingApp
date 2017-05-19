@@ -1,9 +1,10 @@
 const User = require("./models/user");
-const SECRET = require("../.env").SECRET;
 const jwt = require("jwt-simple");
+const ENV = require('../.env');
+
 
 const getToken = function(payload){
-  return jwt.encode(payload, SECRET);
+  return jwt.encode(payload, ENV.SECRET);
 }
 
 
@@ -34,4 +35,8 @@ exports.signup = function(req, res, next){
           res.json({success:true, token: getToken(newUser),username:newUser.username})
       })
     })
+}
+
+exports.signin = function(req, res, next){
+  res.json({success:true, token: getToken(req.user),username:req.user.username})
 }

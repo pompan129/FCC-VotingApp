@@ -21,7 +21,9 @@ class PollThumbUser extends React.Component {
               onClick={()=>this.handleDeletePoll(id)}
               className="btn btn-default">Delete</button>
           </div>
-          <BarGraph width={150} height={150} id={id} poll={this.props.poll}/>
+          <Link to={`/poll/${id}`}   className="btn btn-default">
+            <BarGraph width={150} height={150} id={id} poll={this.props.poll}/>
+          </Link>
           <div className="panel-heading">
             <h2 className="panel-title">{title}</h2>
             <span>by {author}</span>

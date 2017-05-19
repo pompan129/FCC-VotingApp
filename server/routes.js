@@ -1,9 +1,10 @@
 const passport = require('passport');
+const PassportStrategies = require("./auth-strategies");
 var mongoose = require ("mongoose");
 const Authenticate = require("./authenticate");
 var Poll = require("./models/poll-model");//Poll model for mongodb/mongoose
 
-
+const authenticateLocal = passport.authenticate('local', { session: false });
 
 module.exports = function(app){
 
@@ -28,7 +29,8 @@ module.exports = function(app){
   })
 
   app.get('/api/polls/getvote',(req,resp)=>{
-    Poll.findOne({id:req.body.id},function(err,poll){
+    console.log("/api/polls/getvote>>>",req.query.id)
+    Poll.findOne({id:req.query.id},function(err,poll){
       if (err) {
         console.error(err);
         resp.send("Error saving poll to DB", err);
@@ -99,7 +101,6 @@ module.exports = function(app){
   })
 
   app.post('/api/polls/remove/poll',(req,resp)=>{
-      console.log(`/api/polls/remove/poll`,req.body);
       Poll.remove({ id: req.body.id }, function (err) {
         if (err)  {
           console.log(`Error deleting poll:${req.body.id}`,err);
@@ -109,6 +110,8 @@ module.exports = function(app){
       });
   })
 
-  app.post('/api/user/signup', Authenticate.signup);//
+  app.post('/api/user/signup', Authenticate.signup);
+
+  app.post('/api/user/signin', authenticateLocal, Authenticate.signin);
 
 }

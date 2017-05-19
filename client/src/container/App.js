@@ -11,7 +11,7 @@ import EditPoll from './poll-edit';
 import UserSettings from '../component/user-settings';
 import Poll from './poll';
 import Home from './home'
-import {setAuthentication,getAllPolls_Async,signupUser} from '../actions';
+import {setAuthentication,setUsername,getAllPolls_Async,signupUser,signinUser} from '../actions';
 
 import Test from '../component/test';
 
@@ -19,17 +19,22 @@ import Test from '../component/test';
 class App extends React.Component {
   constructor(props){
     super(props);
-    this.handleLogin = this.handleLogin.bind(this);
+    this.handleSignIn = this.handleSignIn.bind(this);
     this.handleSignUp = this.handleSignUp.bind(this);
   }
   componentWillMount(){
     this.props.getAllPolls_Async();
+    this.props.setAuthentication(!!localStorage.getItem("jwt"));
+    this.props.setUsername(localStorage.getItem("username"));
+
   }
 
-  handleLogin(values){
-    this.props.auth?
-      this.props.setAuthentication(false):
-      this.props.setAuthentication(true);
+  handleSignIn({password, email}){
+    this.props.signinUser({username:email, password});
+  }
+
+  handleSignUp({password, email}){
+      this.props.signupUser({username:email, password});
   }
 
   handleLogout(){
@@ -38,16 +43,9 @@ class App extends React.Component {
     localStorage.removeItem("username");
   }
 
-  handleSignUp({password, email}){
-      this.props.setAuthentication(true);
-      console.log("handleSignUp",password, email);//todo
-      this.props.signupUser({username:email, password});
-  }
-
 //todo remove 'test' route
   render() {
     if(!this.props.polls){this.props.getAllPolls_Async(); return null;}//todo
-
     return (
       <BrowserRouter>
         <div className='app-container'>
@@ -57,7 +55,7 @@ class App extends React.Component {
             <Route  path='/dashboard' component={Dashboard} />
             <Route  path='/browse' render={()=><PollList polls={this.props.polls} />} />
             <Route  path='/login'
-              render={()=><Login onSubmit={this.handleLogin} isAuthenticated={this.props.authenticated} />} />
+              render={()=><Login onSubmit={this.handleSignIn} isAuthenticated={this.props.authenticated} />} />
             <Route  path='/signup'
               render={()=><SignUp onSubmit={this.handleSignUp} isAuthenticated={this.props.authenticated}/>} />
             <Route  path='/editpoll/:id' component={EditPoll} />
@@ -77,13 +75,14 @@ class App extends React.Component {
 
 function mapStateToProps({user,polls,}){
     return {
-        user: user.current,
+        user: user.username,
         authenticated:user.authenticated,
         polls
     }
 }
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ setAuthentication,getAllPolls_Async,signupUser}, dispatch);
+    return bindActionCreators(
+      { setAuthentication,setUsername,getAllPolls_Async,signupUser,signinUser}, dispatch);
 }
 
 export default connect(mapStateToProps,mapDispatchToProps)(App);

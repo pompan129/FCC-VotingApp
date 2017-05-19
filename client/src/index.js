@@ -7,10 +7,10 @@ import App from './container/App';
 import './index.css';
 import {setAuthentication} from "./actions";
 
-import reducers from './reducers';
+import reducers ,{enableBatching} from './reducers';
 
 const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);
-const store = createStoreWithMiddleware(reducers);
+const store = createStoreWithMiddleware(enableBatching(reducers));
 
 const token = localStorage.getItem("jwt");
 const username = localStorage.getItem("username");

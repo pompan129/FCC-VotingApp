@@ -1,17 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import {Redirect} from 'react-router-dom';
 import {editPoll,createPoll,getPoll} from '../actions';
 import idGenerator from '../utility/id-generator';
-
-//import IDGenerator from '../utility/id-generator' //todo
-import './poll-editor.css';
+import './poll-edit.css';
 
 class EditPoll extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      poll:this.props.match.params.id?props.poll:{
+      poll:props.poll?props.poll:{
           author: "",
           title: "",
           options: [],
@@ -26,6 +25,13 @@ class EditPoll extends React.Component {
     this.handleExistingInputTxtChange = this.handleExistingInputTxtChange.bind(this);
     this.handlePollReset = this.handlePollReset.bind(this);
     this.handleSavePoll = this.handleSavePoll.bind(this);
+  }
+
+  componentWillMount(){
+    const id=this.props.match.params.id;
+    if(id){
+      this.props.getPoll(id);
+    }
   }
 
   componentWillReceiveProps(nextProps){
@@ -51,9 +57,9 @@ class EditPoll extends React.Component {
       let newPoll = JSON.parse(JSON.stringify(this.state.poll));
       newPoll.id = idGenerator(this.props.user);
       newPoll.author = this.props.user;
-      this.props.createPoll(newPoll,this.props.history.push("/dashboard"));
+      this.props.createPoll(newPoll,this.props.history.push(`/poll/${newPoll.id}`));
     }else{
-      this.props.editPoll(this.state.poll,this.props.history.push("/dashboard"));
+      this.props.editPoll(this.state.poll,this.props.history.push(`/poll/${this.state.poll.id}`));
     }
   }
 
@@ -88,7 +94,6 @@ class EditPoll extends React.Component {
   handleAdddOption(){
     if(!this.state.newOptionTxt)return;
     let options = JSON.parse(JSON.stringify(this.state.poll.options));
-
     options.push({name:this.state.newOptionTxt, votes:0});
     this.setState({poll: {...this.state.poll, options:options}, newOptionTxt:""})
   }
@@ -118,6 +123,11 @@ class EditPoll extends React.Component {
   }
 
   render(){
+
+    if(!this.props.authenticated || !this.props.user){
+      return <Redirect to="/"/>;
+    }
+    console.log("EditPoll",this.props,this.state)
     const options = this.state.poll.options.map((option,index)=>
         <div className="input-group" key={option + index + this.state.poll.id}>
             <input type="text"
@@ -166,7 +176,9 @@ class EditPoll extends React.Component {
 function mapStateToProps({polls,user},ownProps){
     return {
         poll: polls[ownProps.match.params.id],
-        user: user.current
+        user: user.username,
+        authenticated:user.authenticated,
+        polls_state:polls       //todo
     }
 }
 

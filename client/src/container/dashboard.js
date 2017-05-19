@@ -5,6 +5,7 @@ import {Link,Redirect} from 'react-router-dom'
 import UserPolls from '../component/poll-list-user';
 import UserSettings from '../component/user-settings';
 import {getUserPolls} from '../actions';
+import './dashboard.css';
 
 
 class Dashboard extends React.Component {
@@ -23,26 +24,20 @@ class Dashboard extends React.Component {
   }
 
   render(){
-    if(!this.props.authenticated || !this.props.username){return <Redirect to="/"/>; }
+    console.log("dashboard>",this.props)
+    if(!this.props.authenticated || !this.props.user){
+      return <Redirect to="/"/>;
+    }
     return (
       <div className="dashboard">
         <h1>Dashboard</h1>
-        <ul>
-          <li>
+        <div className="btn-group">
             <Link className="btn btn-info" to={`/poll-new`} >Create Poll</Link>
-          </li>
-          <li>
             <button  className="btn btn-info" onClick={()=>this.handleSetContent("polls")}>My Polls</button>
-          </li>
-          <li>
-            <Link to='/browse' className="btn btn-info">Browse</Link>
-          </li>
-          <li>
             <button  className="btn btn-info" onClick={()=>this.handleSetContent("settings")}>Settings</button>
-          </li>
-        </ul>
+        </div>
         <div>
-          {this.state.content==="polls"?<UserPolls  author={this.props.user} polls={this.props.polls} />:""}
+          {this.state.content!=="polls"?"":<UserPolls  author={this.props.user} polls={this.props.polls} />}
           {this.state.content==="settings"?<UserSettings/>:""}
         </div>
       </div>
@@ -55,7 +50,7 @@ class Dashboard extends React.Component {
 function mapStateToProps({user,polls}){
     return {
         user: user.username,
-        uthenticated: user.authenticated,
+        authenticated:user.authenticated,
         polls:polls
     }
 }
