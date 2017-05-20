@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {editVotes,getPoll} from '../actions';
 import BarGraph from './graph-bar';
+import './poll.css';
 
 class Poll extends React.Component {
 
@@ -20,8 +21,17 @@ class Poll extends React.Component {
 
   onFormSubmit(event){
     event.preventDefault();
+    let voted = localStorage.getItem("voted");
+    if(voted){
+      voted = JSON.parse(voted);
+      if(voted[this.props.poll.id]){
+        this.setState({message:"You have already voted. You can Only Vote Once."});
+        return;
+      }
+    }else{ voted = {};}
+    voted[this.props.poll.id] = true;
+    localStorage.setItem("voted",JSON.stringify(voted));
     this.props.editVotes(this.props.poll, this.state.selectedOption)
-
   }
 
   onRadioClick(event){
@@ -43,8 +53,9 @@ class Poll extends React.Component {
                         value={choice.name}
                         onChange={this.onRadioClick}
                         />
-                      {"   " + choice.name + "   " + choice.votes}
+                      {"   " + choice.name + "   "}
                    </label>
+                   <span className="badge">{choice.votes}</span>
                  </div>
         })
 
@@ -70,6 +81,9 @@ class Poll extends React.Component {
           <div className="col-sm-6">
             <BarGraph  id={"p-"+ id} width={300} height={300} poll={poll}/>
           </div>
+        </div>
+        <div className="msg">
+          {this.state.message?<h2>{this.state.message}</h2>:""}
         </div>
       </div>
     )
