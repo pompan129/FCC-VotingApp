@@ -24,7 +24,6 @@ class Dashboard extends React.Component {
   }
 
   render(){
-    console.log("dashboard>",this.props)
     if(!this.props.authenticated || !this.props.user){
       return <Redirect to="/"/>;
     }

@@ -19,7 +19,6 @@ passport.use(new LocalStrategy(
       user.comparePassword(password, function(err, isMatch) {
         if (err) { return done(err); }
         if (!isMatch) {
-          console.log("user.comparePassword>",isMatch);//todo
           return done(null, false,{ message: 'Incorrect username/password.' });
         }
         return done(null, user);
@@ -34,7 +33,6 @@ const jwtStrategyOptions = {
 };
 
 passport.use(new JwtStrategy(jwtStrategyOptions, function(jwt_payload, done) {
-    console.log("JwtStrategy",jwt_payload);//todo
     User.findOne({ username: jwt_payload.username }, function (err, user) {
       if (err) { return done(err); }
       if (user) {

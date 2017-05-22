@@ -6,7 +6,6 @@ import './login.css';
 const Login = (props)=>{
   const { handleSubmit, pristine, reset, submitting } = props;
   if(props.isAuthenticated){return <Redirect to="/dashboard"/>;}
-  console.log("Login",props);//todo
   return(
     <form onSubmit={handleSubmit}>
         <div><h2>Login</h2></div>

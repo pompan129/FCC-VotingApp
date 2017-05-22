@@ -79,11 +79,9 @@ export const getUserPolls=(username)=>{
 
 //a thunk
 export const getPoll = (id)=>{
-  console.log("getPoll", id);
   return (dispatch, getState) => {
     Axios.get('/api/polls/getpoll',{params:{id:id}})
       .then(function (resp) {
-        console.log("getPoll(2)", resp);
         dispatch({
           type: GET_POLL,
           payload: resp.data
@@ -136,7 +134,6 @@ export const editPoll = (poll,callback)=>{
       headers: {Authorization:localStorage.getItem('jwt')}
     })
       .then(function (resp) {
-        console.log("editPoll",resp);//todo
         dispatch(setAllPolls(resp.data));//todo
         callback();
       })
@@ -148,7 +145,6 @@ export const editPoll = (poll,callback)=>{
 
 export const createPoll = (poll,callback)=>{
   return (dispatch, getState) => {
-      console.log("********************createPoll");//todo
       Axios.post('/api/polls/save/poll',{poll:poll},{headers:{Authorization:localStorage.getItem('jwt')}})
         .then(function (resp) {
           dispatch(getAllPolls_Async());
@@ -192,7 +188,6 @@ export const signinUser = ({username,password})=>{
     Axios.post('/api/user/signin',{username,password})
         .then(function (resp) {
           if(resp.data.success){
-            console.log("login-success>",resp.data)
             localStorage.setItem('jwt', resp.data.token);
             localStorage.setItem('username', resp.data.username);
             batch.push(getAllPolls_Async());
@@ -208,9 +203,7 @@ export const signinUser = ({username,password})=>{
           }
         })
         .catch(function (error) {
-          console.log("signinUser:",error.response.data);
           if(error.response.data === "Unauthorized"){
-            console.log('error.response.data === "Unauthorized"');
               batch.push(signOut());
               batch.push(setErrorMessage("Invalid Usename/Password"));
               dispatch(batchActions(batch));

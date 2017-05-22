@@ -13,9 +13,6 @@ import Poll from './poll';
 import Home from './home'
 import {setAuthentication,setUsername,getAllPolls_Async,signupUser,signinUser,signOut} from '../actions';
 
-import Test from '../component/test';
-
-
 class App extends React.Component {
   constructor(props){
     super(props);
@@ -44,7 +41,6 @@ class App extends React.Component {
 //todo remove 'test' route
   render() {
     if(!this.props.polls){this.props.getAllPolls_Async(); return null;}//todo
-    console.log("app>",this.props)
     return (
       <BrowserRouter>
         <div className='app-container'>
@@ -60,7 +56,6 @@ class App extends React.Component {
             <Route  path='/editpoll/:id' component={EditPoll} />
             <Route  path='/poll-new' component={EditPoll} />
             <Route  path='/settings' component={UserSettings} />
-            <Route  path='/test' component={Test} />
             <Route  path='/poll/:id' component={Poll} />
             <Route  path='/error' render={function () {
               return <h2>ERROR</h2>

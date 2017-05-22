@@ -13,7 +13,6 @@ export default function (state={}, action) {
         case MERGE_POLLS:
           return Object.assign({}, state, action.payload);
         case GET_POLL:
-        console.log("pollreducer>GET_POLL>",action.payload)
           return {...state, [action.payload.id]:action.payload}
 
         default:

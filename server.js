@@ -2,12 +2,22 @@ const express = require('express');
 var bodyParser = require("body-parser");
 const app = express();
 const env = require('./.env');
+const path = require('path');
 const Routes = require("./server/routes");
 
 // Express only serves static assets in production
+/*
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static('client/build'));
 }
+*/
+
+app.use(express.static(path.join(__dirname, 'client/build')));
+
+app.get('/', function (req, res) {
+  res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+});
+
 
 //set up database
 var mongoose = require('mongoose');

@@ -12,7 +12,6 @@ class PollList extends React.Component{
   }
 
   render(){
-    console.log("PollList",this.props.polls);
     let {polls} = this.props;
     const List = [];
 
