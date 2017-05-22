@@ -57,9 +57,9 @@ class EditPoll extends React.Component {
       let newPoll = JSON.parse(JSON.stringify(this.state.poll));
       newPoll.id = idGenerator(this.props.user);
       newPoll.author = this.props.user;
-      this.props.createPoll(newPoll,this.props.history.push(`/poll/${newPoll.id}`));
+      this.props.createPoll(newPoll,()=>{this.props.history.push(`/poll/${newPoll.id}`)});
     }else{
-      this.props.editPoll(this.state.poll,this.props.history.push(`/poll/${this.state.poll.id}`));
+      this.props.editPoll(this.state.poll,()=>{this.props.history.push(`/poll/${this.state.poll.id}`)});
     }
   }
 

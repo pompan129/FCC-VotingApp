@@ -29,11 +29,17 @@ passport.use(new LocalStrategy(
 ));
 
 const jwtStrategyOptions = {
-  jwtFromRequest: ExtractJwt.fromHeader('authorization'),
+  jwtFromRequest:(req)=>{return req.headers.authorization}, //ExtractJwt.fromHeader("Authorization"),
   secretOrKey: ENV.SECRET
 };
 
 passport.use(new JwtStrategy(jwtStrategyOptions, function(jwt_payload, done) {
     console.log("JwtStrategy",jwt_payload);//todo
-    return done(null, true);
-}));
+    User.findOne({ username: jwt_payload.username }, function (err, user) {
+      if (err) { return done(err); }
+      if (user) {
+        return done(null, user);
+      }
+      return done(null, false);
+      });
+  }));

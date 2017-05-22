@@ -1,7 +1,6 @@
 const express = require('express');
 var bodyParser = require("body-parser");
 const app = express();
-const tempPolls = require('./temp-polls');
 const env = require('./.env');
 const Routes = require("./server/routes");
 

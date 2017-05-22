@@ -1,6 +1,5 @@
 import Axios from "axios";
 
-
 //Actions
 export const SET_AUTHENTICATION = "SET_AUTHENTICATION";
 export const SET_USERNAME = "SET_USERNAME";
@@ -13,9 +12,6 @@ export const EDIT_POLL = "EDIT_CREATE_POLL";
 export const MERGE_POLLS = "MERGE_POLLS";
 export const BATCH_ACTIONS = "BATCH_ACTIONS";
 export const SET_ERROR_MESSAGE = "SET_ERROR_MESSAGE"
-
-
-
 
 export const setAuthentication = (auth)=>{
     return {
@@ -52,7 +48,7 @@ const setAllPolls = (polls)=>{
 //a thunk
 export const getAllPolls_Async = ()=>{
   return (dispatch, getState) => {
-    Axios.get('/api/polls/getall',{ headers: { authorization: localStorage.getItem('jwt') }})
+    Axios.get('/api/polls/getall')
     .then(function (resp) {
       dispatch(setAllPolls(resp.data));
     })
@@ -79,15 +75,13 @@ export const getUserPolls=(username)=>{
             console.log(error);
           });
     }
-
-
 }
 
 //a thunk
 export const getPoll = (id)=>{
   console.log("getPoll", id);
   return (dispatch, getState) => {
-    Axios.get('/api/polls/getvote',{params:{id:id}})
+    Axios.get('/api/polls/getpoll',{params:{id:id}})
       .then(function (resp) {
         console.log("getPoll(2)", resp);
         dispatch({
@@ -132,8 +126,17 @@ export const editVotes = (poll,optionName)=>{
 //a thunk
 export const editPoll = (poll,callback)=>{
   return (dispatch, getState) => {
-    Axios.post('/api/polls/update/poll',poll)
+      //Axios.post('/api/polls/update/poll',poll)
+    Axios({
+      method: 'post',
+      url: '/api/polls/update/poll',
+      data: {
+        poll:poll
+      },
+      headers: {Authorization:localStorage.getItem('jwt')}
+    })
       .then(function (resp) {
+        console.log("editPoll",resp);//todo
         dispatch(setAllPolls(resp.data));//todo
         callback();
       })
@@ -141,12 +144,12 @@ export const editPoll = (poll,callback)=>{
         console.log(error);
       });
   }
-
 }
 
 export const createPoll = (poll,callback)=>{
   return (dispatch, getState) => {
-      Axios.post('/api/polls/save/poll',poll)
+      console.log("********************createPoll");//todo
+      Axios.post('/api/polls/save/poll',{poll:poll},{headers:{Authorization:localStorage.getItem('jwt')}})
         .then(function (resp) {
           dispatch(getAllPolls_Async());
           callback();
@@ -198,7 +201,10 @@ export const signinUser = ({username,password})=>{
             batch.push(setErrorMessage());//set error to Undefined
             dispatch(batchActions(batch));
           }else{
-
+            console.log('error.response.data === "else"');
+            batch.push(signOut());
+            batch.push(setErrorMessage("Not able to authenticate."));
+            dispatch(batchActions(batch));
           }
         })
         .catch(function (error) {
@@ -216,7 +222,7 @@ export const signinUser = ({username,password})=>{
 //a thunk
 export const deletePoll = (id)=>{
   return (dispatch, getState) => {
-    Axios.post('/api/polls/remove/poll',{id})
+    Axios.post('/api/polls/remove/poll',{id},{headers:{Authorization:localStorage.getItem('jwt')}})
       .then(function (resp) {
         dispatch(getAllPolls_Async());//todo
       })

@@ -9,7 +9,6 @@ const authenticateJWT = passport.authenticate('jwt', { session: false });
 
 module.exports = function(app){
 
-
   app.get('/api/polls/getall',(req,resp)=>{
     Poll.find({},{_id:0},function(err,polls){
       if (err) {
@@ -19,7 +18,7 @@ module.exports = function(app){
     })
   })
 
-  app.get('/api/polls/getUserPolls',authenticateJWT,(req,resp)=>{
+  app.get('/api/polls/getUserPolls',(req,resp)=>{
 
     Poll.find({author:req.query.username},{_id:0},function(err,polls){
       if (err) {
@@ -29,8 +28,7 @@ module.exports = function(app){
     })
   })
 
-  app.get('/api/polls/getvote',(req,resp)=>{
-    console.log("/api/polls/getvote>>>",req.query.id)
+  app.get('/api/polls/getpoll',(req,resp)=>{
     Poll.findOne({id:req.query.id},function(err,poll){
       if (err) {
         console.error(err);
@@ -66,12 +64,15 @@ module.exports = function(app){
     })
   })
 
-  app.post('/api/polls/update/poll',(req,resp)=>{
-      Poll.update({id:req.body.id},req.body,function (err,p) {
+  app.post('/api/polls/update/poll',authenticateJWT,(req,resp)=>{  //authenticateJWT
+    console.log("app.post('/api/polls/update/poll'>>>",req.headers.authorization)
+
+      Poll.update({id:req.body.poll.id},req.body.poll,function (err,p) {
         if (err) {
           console.error(err);
           resp.send("Error saving poll to DB", err);
         }else {
+          console.log("updated poll", p)
           Poll.find(function(err,polls){
             if (err) {
               console.error(err);
@@ -84,12 +85,16 @@ module.exports = function(app){
       });
   })
 
-  app.post('/api/polls/save/poll',(req,resp)=>{
+  app.post('/api/polls/save/poll',authenticateJWT,(req,resp)=>{//authenticateJWT
+    console.log("app.post('/api/polls/save/poll'>>>",req.headers)
+      if(!(req.body.poll.id )){//&& req.body.author && req.body.title && req.body.options
+        resp.status(422).send("error: poll incomplete");
+      }
       const newPoll = new Poll({
-        author: req.body.author,
-        title:  req.body.title,
-        options:  req.body.options,
-        id:  req.body.id
+        author: req.body.poll.author,
+        title:  req.body.poll.title,
+        options:  req.body.poll.options,
+        id:  req.body.poll.id
       });
       newPoll.save(function (err,poll) {
         if (err) {
@@ -101,7 +106,7 @@ module.exports = function(app){
       });
   })
 
-  app.post('/api/polls/remove/poll',(req,resp)=>{
+  app.post('/api/polls/remove/poll',authenticateJWT,(req,resp)=>{
       Poll.remove({ id: req.body.id }, function (err) {
         if (err)  {
           console.log(`Error deleting poll:${req.body.id}`,err);
