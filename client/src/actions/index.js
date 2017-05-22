@@ -4,6 +4,7 @@ import Axios from "axios";
 //Actions
 export const SET_AUTHENTICATION = "SET_AUTHENTICATION";
 export const SET_USERNAME = "SET_USERNAME";
+export const LOG_OUT = "LOG_OUT";
 export const GET_ALL_POLLS = "GET_ALL_POLLS";
 export const GET_POLL = "GET_POLL";
 export const SET_ALL_POLLS = "SET_ALL_POLLS";
@@ -11,6 +12,7 @@ export const EDIT_VOTE = "EDIT_VOTE";
 export const EDIT_POLL = "EDIT_CREATE_POLL";
 export const MERGE_POLLS = "MERGE_POLLS";
 export const BATCH_ACTIONS = "BATCH_ACTIONS";
+export const SET_ERROR_MESSAGE = "SET_ERROR_MESSAGE"
 
 
 
@@ -29,6 +31,13 @@ export const setUsername = (name)=>{
     }
 }
 
+export const setErrorMessage = (message)=>{
+    console.log("setErrorMessage",message);//todo
+  return {
+    type: SET_ERROR_MESSAGE,
+    payload: message
+  }
+}
 
 const setAllPolls = (polls)=>{
   let newPolls = {}
@@ -43,7 +52,7 @@ const setAllPolls = (polls)=>{
 //a thunk
 export const getAllPolls_Async = ()=>{
   return (dispatch, getState) => {
-    Axios.get('/api/polls/getall')
+    Axios.get('/api/polls/getall',{ headers: { authorization: localStorage.getItem('jwt') }})
     .then(function (resp) {
       dispatch(setAllPolls(resp.data));
     })
@@ -165,22 +174,41 @@ export const signupUser = ({username,password})=>{
     }
 }
 
+export const signOut=()=>{
+  localStorage.removeItem("jwt");
+  localStorage.removeItem("username");
+  const batch = [];
+  batch.push(setAuthentication(false));
+  batch.push(setUsername(""));
+  return batchActions(batch);
+}
+
 export const signinUser = ({username,password})=>{
   return (dispatch, getState) => {
+    const batch = [];
     Axios.post('/api/user/signin',{username,password})
         .then(function (resp) {
           if(resp.data.success){
+            console.log("login-success>",resp.data)
             localStorage.setItem('jwt', resp.data.token);
             localStorage.setItem('username', resp.data.username);
-            const batch = [];
             batch.push(getAllPolls_Async());
             batch.push(setAuthentication(true));
             batch.push(setUsername(resp.data.username));
+            batch.push(setErrorMessage());//set error to Undefined
             dispatch(batchActions(batch));
+          }else{
+
           }
         })
         .catch(function (error) {
-          console.log("Error>:",error.response.data.error);
+          console.log("signinUser:",error.response.data);
+          if(error.response.data === "Unauthorized"){
+            console.log('error.response.data === "Unauthorized"');
+              batch.push(signOut());
+              batch.push(setErrorMessage("Invalid Usename/Password"));
+              dispatch(batchActions(batch));
+          }
         });
     }
 }

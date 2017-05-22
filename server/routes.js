@@ -5,6 +5,7 @@ const Authenticate = require("./authenticate");
 var Poll = require("./models/poll-model");//Poll model for mongodb/mongoose
 
 const authenticateLocal = passport.authenticate('local', { session: false });
+const authenticateJWT = passport.authenticate('jwt', { session: false });
 
 module.exports = function(app){
 
@@ -18,7 +19,7 @@ module.exports = function(app){
     })
   })
 
-  app.get('/api/polls/getUserPolls',(req,resp)=>{
+  app.get('/api/polls/getUserPolls',authenticateJWT,(req,resp)=>{
 
     Poll.find({author:req.query.username},{_id:0},function(err,polls){
       if (err) {

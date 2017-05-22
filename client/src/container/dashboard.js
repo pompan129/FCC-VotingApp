@@ -39,6 +39,7 @@ class Dashboard extends React.Component {
         <div>
           {this.state.content!=="polls"?"":<UserPolls  author={this.props.user} polls={this.props.polls} />}
           {this.state.content==="settings"?<UserSettings/>:""}
+          {this.props.error?<h3>this.props.error</h3>:""}
         </div>
       </div>
     )
@@ -47,11 +48,12 @@ class Dashboard extends React.Component {
 }
 
 
-function mapStateToProps({user,polls}){
+function mapStateToProps({user,polls,message}){
     return {
         user: user.username,
         authenticated:user.authenticated,
-        polls:polls
+        polls:polls,
+        error: message.error
     }
 }
 

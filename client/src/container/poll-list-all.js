@@ -7,6 +7,9 @@ import PollThumb from '../component/poll-thumb';
 
 
 class PollList extends React.Component{
+  componentWillMount(){
+    this.props.getAllPolls_Async();
+  }
 
   render(){
     console.log("PollList",this.props.polls);

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import logo from './vote3.png';
 //import Header from '../component/header'; //todo
 import InfoCard from '../component/info-card';
 import './home.css';

@@ -8,12 +8,12 @@ export default class Graph extends Component{
     componentDidMount(){
         const {id,poll,width,height} = this.props
         const elem = document.getElementById("p-"+id);
-        this.graph = new BarGraph({elem,data:poll.options,width,height})
+        this.graph = new BarGraph({elem,data:poll.options,width,height})//graph will appear in rendered <div></div>
         this.graph.create();
     }
     componentDidUpdate(){
         const {poll} = this.props;
-        this.graph.update({data:poll.options})
+        this.graph.update({data:poll.options})//graph will appear in rendered <div></div>
     }
 
 

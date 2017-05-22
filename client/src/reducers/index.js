@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 import userReducer from './user-reducer';
 import pollReducer from './poll-reducer';
+import messageReducer from './message-reducer';
 import {BATCH_ACTIONS} from "../actions";
 
 export function enableBatching(reduce) {
@@ -18,7 +19,8 @@ export function enableBatching(reduce) {
 const rootReducer = combineReducers({
     form: formReducer,
     polls: pollReducer,
-    user: userReducer
+    user: userReducer,
+		message: messageReducer
 });
 
 export default rootReducer;

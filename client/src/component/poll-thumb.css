@@ -7,7 +7,7 @@
 	border: 1px solid #CCC;
 }
 .bar{
-	fill: purple;
+	fill: #ff844c;
 	shape-rendering: crispEdges;
 }
 .bar-label{

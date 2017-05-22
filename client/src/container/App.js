@@ -11,7 +11,7 @@ import EditPoll from './poll-edit';
 import UserSettings from '../component/user-settings';
 import Poll from './poll';
 import Home from './home'
-import {setAuthentication,setUsername,getAllPolls_Async,signupUser,signinUser} from '../actions';
+import {setAuthentication,setUsername,getAllPolls_Async,signupUser,signinUser,signOut} from '../actions';
 
 import Test from '../component/test';
 
@@ -38,14 +38,13 @@ class App extends React.Component {
   }
 
   handleLogout(){
-    this.props.setAuthentication(false)
-    localStorage.removeItem("jwt");
-    localStorage.removeItem("username");
+    this.props.signOut()
   }
 
 //todo remove 'test' route
   render() {
     if(!this.props.polls){this.props.getAllPolls_Async(); return null;}//todo
+    console.log("app>",this.props)
     return (
       <BrowserRouter>
         <div className='app-container'>
@@ -55,7 +54,7 @@ class App extends React.Component {
             <Route  path='/dashboard' component={Dashboard} />
             <Route  path='/browse' render={()=><PollList polls={this.props.polls} />} />
             <Route  path='/login'
-              render={()=><Login onSubmit={this.handleSignIn} isAuthenticated={this.props.authenticated} />} />
+              render={()=><Login onSubmit={this.handleSignIn} isAuthenticated={this.props.authenticated} errorMessage={this.props.message.error}/>} />
             <Route  path='/signup'
               render={()=><SignUp onSubmit={this.handleSignUp} isAuthenticated={this.props.authenticated}/>} />
             <Route  path='/editpoll/:id' component={EditPoll} />
@@ -73,16 +72,17 @@ class App extends React.Component {
   }
 }
 
-function mapStateToProps({user,polls,}){
+function mapStateToProps({user,polls,message}){
     return {
         user: user.username,
         authenticated:user.authenticated,
+        message:message,
         polls
     }
 }
 function mapDispatchToProps(dispatch) {
     return bindActionCreators(
-      { setAuthentication,setUsername,getAllPolls_Async,signupUser,signinUser}, dispatch);
+      { setAuthentication,setUsername,getAllPolls_Async,signupUser,signinUser,signOut}, dispatch);
 }
 
 export default connect(mapStateToProps,mapDispatchToProps)(App);
